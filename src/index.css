@@ -1,4 +1,4 @@
-/* @import "tailwindcss";
+@import "tailwindcss";
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
@@ -260,4 +260,4 @@
   .animate-fade-up {
     animation: fade-up 0.8s var(--ease-out) forwards;
   }
-} */
+}
