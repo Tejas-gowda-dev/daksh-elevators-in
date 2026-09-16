@@ -106,7 +106,17 @@ export default function QuotationBuilder() {
         </button>
 
 
-
+        {/* Preview */}
+        <button
+          onClick={() => setTab('preview')}
+          disabled={tab === 'preview'}
+          className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${tab === 'preview'
+              ? 'bg-slate-200 text-slate-400 cursor-not-allowed'
+              : 'bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 hover:border-indigo-400'
+            }`}
+        >
+          👁 Preview
+        </button>
         {/* Save Draft */}
         <button
           onClick={handleSaveDraft}
@@ -115,7 +125,7 @@ export default function QuotationBuilder() {
           {savedMsg ? '✓ Saved' : '💾 Save Draft'}
         </button>
 
-      
+
 
         {/* Excel */}
         <button
