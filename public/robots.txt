@@ -1,0 +1,6 @@
+User-agent: *
+
+Allow: /
+Disallow: /quotation-generator
+
+Sitemap: https://dakshelevators.in/sitemap.xml
