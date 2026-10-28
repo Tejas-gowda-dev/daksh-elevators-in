@@ -6,7 +6,7 @@ import type { CompanySettings } from '../types/quotation';
 export const defaultCompanySettings: CompanySettings = {
   name: 'Daksh Elevators Pvt. Ltd.',
   tagline: 'INSTALLATION | SERVICE | MODERNIZATION',
-  logoUrl: '/quotation-logo.png',         // reused for header AND watermark — react-pdf needs jpg/png, not webp
+  logoUrl: '/WhatsApp_Image_2026-10-27_at_23.03.27-removebg-preview.png', // reused for quotation header and watermark
   addressLine: 'No.12, 10TH Main Adarsha Layout, Jnanajyothinagar, Mallathalli, Bangalore-560056',
   phone1: '080 29916452',
   phone2: '8971376452 | 94498 66452',

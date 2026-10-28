@@ -15,8 +15,8 @@ function blankQuotation(): QuotationData {
   return {
     id: '',
     status: 'draft',
-    quotationNo: '',            // filled by QuotationForm's auto-generation effect
-    date: '',
+    quotationNo: getNextQuotationNumber(),
+    date: todayFormatted(),
     subject: 'Supply, Installation, Testing & Commissioning of Passenger Elevator',
     customer: { salutation: 'Mr./Mrs.', customerName: '', address: '', projectSiteAddress: '' },
     specs: { ...specDefaults },
@@ -27,8 +27,8 @@ function blankQuotation(): QuotationData {
 }
 
 export default function QuotationBuilder() {
-  const [data, setData] = useState<QuotationData>(blankQuotation());
-  const [isNew, setIsNew] = useState(true);
+  // Use a lazy initializer so blankQuotation only runs on mount, not on every render.
+  const [data, setData] = useState<QuotationData>(() => blankQuotation());
   const [tab, setTab] = useState<'edit' | 'preview' | 'drafts'>('edit');
   const [savedMsg, setSavedMsg] = useState(false);
   const [exportingPdf, setExportingPdf] = useState(false);
@@ -41,14 +41,12 @@ export default function QuotationBuilder() {
   function handleSaveDraft() {
     const saved = saveDraft(data);
     setData(saved);
-    setIsNew(false);
     setSavedMsg(true);
     setTimeout(() => setSavedMsg(false), 1500);
   }
 
   function handleNewQuotation() {
     setData(blankQuotation());
-    setIsNew(true);
     setTab('edit');
   }
 
@@ -56,7 +54,6 @@ export default function QuotationBuilder() {
     const draft = loadDraft(id);
     if (draft) {
       setData(draft);
-      setIsNew(false);
       setTab('edit');
     }
   }
@@ -67,7 +64,6 @@ export default function QuotationBuilder() {
       copy.quotationNo = getNextQuotationNumber();
       copy.date = todayFormatted();
       setData(copy);
-      setIsNew(false); // has real content already, just needs saving under its new id
       setTab('edit');
     }
   }
@@ -117,6 +113,16 @@ export default function QuotationBuilder() {
         >
           👁 Preview
         </button>
+        <button
+          onClick={() => setTab('drafts')}
+          disabled={tab === 'drafts'}
+          className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${tab === 'drafts'
+              ? 'bg-slate-200 text-slate-400 cursor-not-allowed'
+              : 'bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 hover:border-indigo-400'
+            }`}
+        >
+          Saved Drafts
+        </button>
         {/* Save Draft */}
         <button
           onClick={handleSaveDraft}
@@ -146,7 +152,7 @@ export default function QuotationBuilder() {
 
       </div>
 
-      {tab === 'edit' && <QuotationForm value={data} onChange={setData} isNew={isNew} />}
+      {tab === 'edit' && <QuotationForm value={data} onChange={setData} />}
       {tab === 'preview' && <QuotationPreview data={data} company={company} />}
       {tab === 'drafts' && (
         <DraftsList onOpen={handleOpenDraft} onDuplicate={handleDuplicate} />

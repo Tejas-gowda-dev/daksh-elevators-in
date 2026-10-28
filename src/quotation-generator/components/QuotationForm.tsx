@@ -1,13 +1,10 @@
-import { useEffect } from 'react';
 import type { QuotationData, SpecFieldKey, PriceLine } from '../types/quotation';
 import { specOptions, specLabels } from '../data/specOptions';
-import { getNextQuotationNumber, todayFormatted } from '../utils/quotationNumber';
 import { priceLineDescriptions } from '../data/specOptions';
 
 interface Props {
   value: QuotationData;
   onChange: (next: QuotationData) => void;
-  isNew: boolean; // true only when creating a brand-new quotation (drives auto quotation-no/date)
 }
 
 // One field renders as <select> when specOptions has a list for that key,
@@ -53,15 +50,7 @@ function SpecField({
   );
 }
 
-export default function QuotationForm({ value, onChange, isNew }: Props) {
-  // Auto-generate quotation number + today's date exactly once, for new quotations only.
-  // Purely client-side (localStorage counter) — no request, no loading state needed.
-  useEffect(() => {
-    if (!isNew) return;
-    if (value.quotationNo) return;
-    onChange({ ...value, quotationNo: getNextQuotationNumber(), date: todayFormatted() });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isNew]);
+export default function QuotationForm({ value, onChange }: Props) {
 
   const setSpec = (key: SpecFieldKey, v: string) =>
     onChange({ ...value, specs: { ...value.specs, [key]: v } });
@@ -214,12 +203,17 @@ export default function QuotationForm({ value, onChange, isNew }: Props) {
       </section>
 
       {/* Commercial Proposal */}
-      <section className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
+      <section className="bg-white p-4 sm:p-6 rounded-xl border border-slate-200 shadow-sm space-y-4">
         <h3 className="text-lg font-bold text-slate-900 border-b border-slate-100 pb-2">
           Commercial Proposal
         </h3>
-        <div className="overflow-x-auto rounded-lg border border-slate-200">
-          <table className="min-w-full divide-y divide-slate-200 text-left text-sm">
+        <div
+          className="max-w-full overflow-x-auto overscroll-x-contain rounded-lg border border-slate-200"
+          role="region"
+          aria-label="Commercial proposal price lines"
+          tabIndex={0}
+        >
+          <table className="min-w-[760px] w-full divide-y divide-slate-200 text-left text-sm">
             <thead className="bg-slate-50 text-slate-700 font-semibold uppercase text-xs tracking-wider">
               <tr>
                 <th className="px-4 py-3 min-w-[240px]"><strong>WE PROPOSE</strong>{" "}
